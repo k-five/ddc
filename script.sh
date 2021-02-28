@@ -198,9 +198,6 @@ if [[ ${_docker['flag']} == 1 ]]; then
                                     docker-logrotate \
                                     docker-engine;
 
-                     print_title "yum -y update";
-                     sudo yum -y update;
-
                      print_title "Install prerequisite for docker"
                      sudo yum install -y yum-utils;
 
