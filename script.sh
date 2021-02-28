@@ -43,6 +43,7 @@ function __help(){
     |                   $(colorize 'cyan' 'install'): try to install docker
     |                   $(colorize 'cyan' 'uninstall'): try to uninstall docker
     |                   $(colorize 'cyan' 'compose'): try install docker-compose
+    |                   $(colorize 'cyan' 'kubectl'): try install kubernetes CLI
 
     | --con
     | --container       container to install ...
@@ -262,6 +263,23 @@ function _docker_call(){
 
                 print_title 'Add link to /usr/bin';
                 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;
+            ;;
+
+            kubectl )
+                print_title 'Download kubernetes and save on disk';
+                curl -sLO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl";
+
+                print_title 'Check the checksum of the file';
+                curl -sLO "https://dl.k8s.io/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl.sha256";
+
+                print_title 'Validate the kubectl binary against the checksum file'
+                echo "$(<kubectl.sha256) kubectl" | sha256sum --check;
+
+                print_title 'Install kubectl';
+                sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl;
+
+                print_title 'Add link to /usr/bin';
+                sudo ln -s /usr/local/bin/kubectl /usr/bin/kubectl;
             ;;
 
             * )
