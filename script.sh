@@ -18,6 +18,10 @@ function colorize(){
     fi
 }
 
+function print_title(){
+    echo  "task ... $(colorize cyan $1)"; 
+}
+
 
 ################################################################################
 # __help function
@@ -184,7 +188,7 @@ if [[ ${_docker['flag']} == 1 ]]; then
                 centos )
                     # doc used
                     # https://docs.docker.com/engine/install/centos/#install-using-the-repository
-                    echo 'yum -y update'
+                    print_title "yum -y update"
                     sudo yum remove docker \
                                     docker-client \
                                     docker-client-latest \
@@ -194,38 +198,38 @@ if [[ ${_docker['flag']} == 1 ]]; then
                                     docker-logrotate \
                                     docker-engine;
 
-                     echo "Install prerequisite"
+                     print_title "Install prerequisite"
                      sudo yum install -y yum-utils;
 
-                     echo "Install dev dependencies";
+                     print_title "Install dev dependencies";
                      yum clean all;
                      yum groupinstall -y "Development tools";
 
-                     echo "Add the Docker repository";
+                     print_title "Add the Docker repository";
                      sudo yum-config-manager \
                                 --add-repo \
                                 https://download.docker.com/linux/centos/docker-ce.repo;
 
-                     echo "install the latest version";
+                     print_title "install the latest version";
                      sudo yum install -y docker-ce docker-ce-cli containerd.io;
 
-                     echo "Check if docker group exists";
+                     print_title "Check if docker group exists";
                      sudo grep docker -io /etc/group
                      if [[ $? != "0" ]]; then
-                         echo "Add docker group";
+                         print_title "Add docker group";
                          sudo groupadd docker;
                      fi
 
-                     echo "Add current user to docker group";
+                     print_title "Add current user to docker group";
                      sudo usermod -aG docker $USER;
 
-                     echo "Start docker.service";
+                     print_title "Start docker.service";
                      sudo systemctl start docker;
 
-                     echo "Enable docker.service";
+                     print_title "Enable docker.service";
                      sudo systemctl enable docker;
 
-                     echo "Test docker hello-world";
+                     print_title "Test docker hello-world";
                      sudo docker run hello-world;
                 ;;
 
