@@ -269,21 +269,36 @@ function _container_call(){
                 # https://hub.docker.com/r/prom/node-exporter
                 print_title "docker pull ${_container['name']}";
                 docker pull prom/node-exporter;
+                echo;
+                echo 'guide';
+                echo 'https://hub.docker.com/r/prom/node-exporter';
+                echo 'https://github.com/prometheus/node_exporter';
             ;;
 
             prometheus )
                 print_title "docker pull ${_container['name']}";
                 docker pull prom/prometheus;
+                echo;
+                echo 'guide';
+                echo 'https://hub.docker.com/r/prom/prometheus';
+                echo 'https://github.com/prometheus/prometheus';
             ;;
 
             visualizer )
                 print_title "docker pull ${_container['name']}";
                 docker pull dockersamples/visualizer;
+                echo;
+                echo 'guide';
+                echo 'https://github.com/dockersamples/docker-swarm-visualizer';
             ;;
 
             portainer-ce )
                 print_title "docker pull ${_container['name']}";
                 docker pull portainer/portainer-ce;
+                echo;
+                echo 'guide';
+                echo 'https://registry.hub.docker.com/r/portainer/portainer-ce/#!';
+                echo 'https://documentation.portainer.io/v2.0/deploy/ceinstalldocker/';
             ;;
 
             * )
