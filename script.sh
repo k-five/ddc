@@ -40,8 +40,8 @@ function __help(){
     |                   $(colorize 'cyan' 'info'): more info about OS
 
     | --docker          docker actions ...
-    |                   $(colorize 'cyan' 'install'): try to install docker
-    |                   $(colorize 'cyan' 'uninstall'): try to uninstall docker
+    |                   $(colorize 'cyan' 'docker'): try to install docker
+    |                   $(colorize 'cyan' 'remove'): try to uninstall docker
     |                   $(colorize 'cyan' 'compose'): try install docker-compose
     |                   $(colorize 'cyan' 'kubectl'): try install kubernetes CLI
 
@@ -183,7 +183,7 @@ function _os_call(){
 function _docker_call(){
     if [[ ${_docker['flag']} == 1 ]]; then
         case ${_docker['action']} in
-            install )
+            docker )
                 case $os_release in
                     centos )
                         # doc used
@@ -250,7 +250,7 @@ function _docker_call(){
                 esac
             ;;
 
-            uninstall )
+            remove )
                 echo "selecting ${_docker['action']}";
             ;;
 
