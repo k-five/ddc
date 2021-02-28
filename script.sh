@@ -263,6 +263,10 @@ function _docker_call(){
 
                 print_title 'Add link to /usr/bin';
                 sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;
+
+                echo;
+                echo 'reference';
+                echo 'https://docs.docker.com/compose/install/';
             ;;
 
             kubectl )
@@ -280,6 +284,10 @@ function _docker_call(){
 
                 print_title 'Add link to /usr/bin';
                 sudo ln -s /usr/local/bin/kubectl /usr/bin/kubectl;
+
+                echo;
+                echo 'reference';
+                echo 'https://kubernetes.io/docs/tasks/tools/install-kubectl/';
             ;;
 
             * )
@@ -300,7 +308,7 @@ function _container_call(){
                 print_title "docker pull ${_container['name']}";
                 docker pull prom/node-exporter;
                 echo;
-                echo 'guide';
+                echo 'reference';
                 echo 'https://hub.docker.com/r/prom/node-exporter';
                 echo 'https://github.com/prometheus/node_exporter';
             ;;
@@ -309,7 +317,7 @@ function _container_call(){
                 print_title "docker pull ${_container['name']}";
                 docker pull prom/prometheus;
                 echo;
-                echo 'guide';
+                echo 'reference';
                 echo 'https://hub.docker.com/r/prom/prometheus';
                 echo 'https://github.com/prometheus/prometheus';
             ;;
@@ -318,7 +326,7 @@ function _container_call(){
                 print_title "docker pull ${_container['name']}";
                 docker pull dockersamples/visualizer;
                 echo;
-                echo 'guide';
+                echo 'reference';
                 echo 'https://github.com/dockersamples/docker-swarm-visualizer';
             ;;
 
@@ -326,7 +334,7 @@ function _container_call(){
                 print_title "docker pull ${_container['name']}";
                 docker pull portainer/portainer-ce;
                 echo;
-                echo 'guide';
+                echo 'reference';
                 echo 'https://registry.hub.docker.com/r/portainer/portainer-ce/#!';
                 echo 'https://documentation.portainer.io/v2.0/deploy/ceinstalldocker/';
             ;;
