@@ -52,5 +52,22 @@ bash <(curl -sL 'https://raw.githubusercontent.com/k-five/ldc/master/script.sh')
 
 ### update os , install docker, install node-exporter and prometheus
 ```bash
-bash <(curl -sL 'https://raw.githubusercontent.com/k-five/ldc/master/script.sh') --os update --docker install --con node-exporter --con prometheus
+bash <(curl -sL 'https://raw.githubusercontent.com/k-five/ldc/master/script.sh') --os update --docker docker --con node-exporter --con prometheus
+```
+
+## or simpler
+```bash
+alias ldc='bash <(curl -sL 'https://raw.githubusercontent.com/k-five/ldc/master/script.sh')'
+
+# check help
+ldc --help
+
+# update the OS
+ldc --os update
+
+# update the OS, install Docker, install prometheus for default registry
+ldc --os update --docker docker --con node-exporter --con prometheus
+
+# update the OS, install Docker, install node-exporter and prometheus from a docker.mirror.derak.cloud
+ldc --os update --docker docker --reg docker.mirror.derak.cloud --con node-exporter --con prometheus
 ```
