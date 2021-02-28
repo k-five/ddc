@@ -32,31 +32,32 @@ function __help(){
 
  -h | --help            print this help
 
-    | --os              OS actions ...
+ -O | --os              OS actions ...
     |                   $(colorize 'cyan' 'type'): show / check the name
     |                   $(colorize 'cyan' 'version'): show / check the version
     |                   $(colorize 'cyan' 'update'): update the OS
     |                   $(colorize 'cyan' 'upgrade'): upgrade the OS
     |                   $(colorize 'cyan' 'info'): more info about OS
 
-    | --docker          docker actions ...
+ -D | --docker          docker actions ...
     |                   $(colorize 'cyan' 'docker'): try to install docker
     |                   $(colorize 'cyan' 'remove'): try to uninstall docker
     |                   $(colorize 'cyan' 'compose'): try install docker-compose
     |                   $(colorize 'cyan' 'kubectl'): try install kubernetes CLI
 
 
-    | --con
+ -C | --con
     | --container       container to install (official) ...
     |                   $(colorize 'yellow' 'prometheus'): install prometheus
     |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
     |                   $(colorize 'yellow' 'visualizer'): install docker visualizer
     |                   $(colorize 'yellow' 'portainer-ce'): install portainer-ce
 
- -C | --command         Command actions ...
-    |                   $(colorize 'yellow' 'check'): check prerequisites
+    | --command         Command actions ...
+    |                   $(colorize 'white' 'check'): check prerequisites
+    |                   $(colorize 'white' 'docker'): docker if docker-* have been installed
 
-    | --reg
+-R  | --reg
     | --registry        use a mirror registry address
     |                   $(colorize 'white' 'index.docker.io') is the default address
 
@@ -102,6 +103,31 @@ function command_check () {
     return $return_code;
 }
 
+################################################################################
+# check for docker-*
+################################################################################
+function command_docker () {
+    declare -a _cmds_;
+    _cmds_=(docker docker-compose docker-machine kubectl);
+    return_code=0;
+
+    for cmd in ${_cmds_[@]}; do
+        temp_var=$(which  "$cmd" > /dev/null 2>&1);
+        if [[ $? != 0 ]]; then
+            printf "%-20s %s" "$cmd~" "~" | tr ' ~' '. ';
+            printf "[ $(colorize 'red' 'ERROR') ] not found\n";
+            if [[ $cmd == 'shodan' ]]; then
+                echo '>  Please install shodan manually: https://cli.shodan.io/';
+            fi
+            return_code=1;
+        else
+            printf "%-20s %s" "$cmd~" "~" | tr ' ~' '. ';
+            printf "[ $(colorize 'green' 'OK') ]\n";
+
+        fi
+    done
+    return $return_code;
+}
 
 function unknown_option(){
     echo "$(colorize red $1) is unknown option for $(colorize 'green' $2)";
@@ -443,6 +469,15 @@ if [[ ${_command['flag']} == 1 ]]; then
         check )
             echo "Check prerequisites";
             command_check;
+        ;;
+
+        docker )
+            echo "Check prerequisites";
+            command_docker;
+        ;;
+
+        * )
+            unknown_option ${_container['name']} --command;
         ;;
     esac
 fi
