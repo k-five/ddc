@@ -207,7 +207,7 @@ if [[ ${_docker['flag']} == 1 ]]; then
                                 https://download.docker.com/linux/centos/docker-ce.repo;
 
                      echo "install the latest version";
-                     sudo yum install docker-ce docker-ce-cli containerd.io;
+                     sudo yum install -y docker-ce docker-ce-cli containerd.io;
 
                      echo "Check if docker group exists";
                      sudo grep docker -io /etc/group
