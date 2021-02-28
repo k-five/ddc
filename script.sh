@@ -82,7 +82,7 @@ fi
 ################################################################################
 function command_check () {
     declare -a _cmds_;
-    _cmds_=(curl echo printf chmod);
+    _cmds_=(curl echo printf chmod install);
     return_code=0;
 
     for cmd in ${_cmds_[@]}; do
