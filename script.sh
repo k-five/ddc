@@ -8,6 +8,7 @@ _colors_[ 'red' ]='\x1b[1;31m';
 _colors_[ 'green' ]='\x1b[1;32m';
 _colors_[ 'yellow' ]='\x1b[1;33m';
 _colors_[ 'cyan' ]='\x1b[1;36m';
+_colors_[ 'white' ]='\x1b[1;37m';
 _colors_[ 'reset' ]='\x1b[0m';
 
 function colorize(){
@@ -42,8 +43,11 @@ function __help(){
     |                   $(colorize 'cyan' 'install'): try to install docker
     |                   $(colorize 'cyan' 'uninstall'): try to uninstall docker
 
-    | --container       container actions ...
-    |                   $(colorize 'cyan' 'install'): install a container
+    | --con
+    | --container       container to install ...
+    |                   $(colorize 'yellow' 'prometheus'): install prometheus
+    |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
+
 
 Company   Derak.Cloud
 Developer Shakiba Moshiri
@@ -97,7 +101,7 @@ _docker['action']='';
 
 declare -A _container;
 _container['flag']=0;
-_container['action']='';
+_container['name']='';
 
 while true ; do
     case "$1" in
@@ -119,17 +123,20 @@ while true ; do
 
         --con | --container )
             _container['flag']=1;
-            _container['action']=$2;
+            _container['name']=$2;
             shift 2;
         ;;
 
 
-         --)
+         -- )
             shift;
             break;
          ;;
 
-         *) echo "Internal error!" ; exit 1 ;;
+         * )
+            echo "Internal error!" ;
+            exit 1;
+         ;;
     esac
 done
 
@@ -140,7 +147,6 @@ done
 if [[ ${_os['flag']} == 1 ]]; then
     case ${_os['action']} in
         type )
-        
             echo $os_release
         ;;
 
@@ -287,13 +293,20 @@ fi
 # check and run _container action
 ################################################################################
 if [[ ${_container['flag']} == 1 ]]; then
-    case ${_container['action']} in
-        install )
-            echo "selecting ${_container['action']}";
+    case ${_container['name']} in
+        node-exporter )
+            # https://hub.docker.com/r/prom/node-exporter
+            print_title "docker pull ${_container['name']}";
+            docker pull prom/node-exporter;
+        ;;
+
+        prometheus )
+            print_title "docker pull ${_container['name']}";
+            docker pull prom/prometheus;
         ;;
 
         * )
-            unknown_option ${_container['action']} --container;
+            unknown_option ${_container['name']} --container;
         ;;
     esac
 fi
