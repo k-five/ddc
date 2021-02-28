@@ -139,7 +139,7 @@ function unknown_option(){
 ################################################################################
 # main flags, both longs and shorts
 ################################################################################
-ARGS=`getopt -o "h" -l "help,os:,docker:,container:,registry:,command:" -- "$@"`
+ARGS=`getopt -o "hO:D:C:R:" -l "help,os:,docker:,container:,registry:,command:" -- "$@"`
 eval set -- "$ARGS"
 
 
@@ -169,7 +169,7 @@ _container['flag']=0;
 _container['name']='';
 
 declare -A _command;
-_command['flag']=1;
+_command['flag']=0;
 _command['action']='';
 
 
@@ -418,26 +418,26 @@ while true ; do
             __help;
         ;;
 
-        --os )
+        -O | --os )
             _os['flag']=1;
             _os['action']=$2;
             _os_call;
             shift 2;
         ;;
 
-        --docker )
+        -D | --docker )
             _docker['flag']=1;
             _docker['action']=$2;
             _docker_call;
             shift 2;
         ;;
 
-        --reg | --registry )
+        -R | --reg | --registry )
             _docker['registry']=$2;
             shift 2;
         ;;
 
-        --con | --container )
+        -C | --con | --container )
             _container['flag']=1;
             _container['name']=$2;
             _container_call;
