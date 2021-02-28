@@ -103,6 +103,185 @@ declare -A _container;
 _container['flag']=0;
 _container['name']='';
 
+
+################################################################################
+# check and run _os action
+################################################################################
+function _os_call(){
+    if [[ ${_os['flag']} == 1 ]]; then
+        case ${_os['action']} in
+            type )
+                echo $os_release
+            ;;
+
+            version )
+                echo $os_version
+            ;;
+
+            update )
+                case $os_release in
+                    centos )
+                        print_title "yum -y update";
+                        sudo yum -y update;
+                    ;;
+
+                    debian )
+                        echo 'apt-get -y update'
+                    ;;
+
+                    ubuntu )
+                        echo 'apt-get -y update'
+                    ;;
+
+                    arch )
+                        echo 'pacman -Ys update'
+                    ;;
+                esac
+            ;;
+
+            upgrade )
+                case $os_release in
+                    centos )
+                        print_title "yum -y upgrade";
+                        sudo yum -y upgrade;
+                    ;;
+
+                    debian )
+                        echo 'apt-get -y upgrade'
+                    ;;
+
+                    ubuntu )
+                        echo 'apt-get -y upgrade'
+                    ;;
+
+                    arch )
+                        echo 'pacman -Ys upgrade'
+                    ;;
+                esac
+            ;;
+
+
+            info )
+                cat /etc/os-*
+            ;;
+
+            * )
+                unknown_option ${_os['action']} --os;
+            ;;
+        esac
+    fi
+}
+
+
+################################################################################
+# check and run _docker action
+################################################################################
+function _docker_call(){
+    if [[ ${_docker['flag']} == 1 ]]; then
+        case ${_docker['action']} in
+            install )
+                case $os_release in
+                    centos )
+                        # doc used
+                        # https://docs.docker.com/engine/install/centos/#install-using-the-repository
+                        print_title "Remove old version of docker"
+                        sudo yum remove docker \
+                                        docker-client \
+                                        docker-client-latest \
+                                        docker-common \
+                                        docker-latest \
+                                        docker-latest-logrotate \
+                                        docker-logrotate \
+                                        docker-engine;
+
+                         print_title "Install prerequisite for docker"
+                         sudo yum install -y yum-utils;
+
+                         print_title "Install dev dependencies";
+                         yum clean all;
+                         yum groupinstall -y "Development tools";
+
+                         print_title "Add the Docker repository";
+                         sudo yum-config-manager \
+                                    --add-repo \
+                                    https://download.docker.com/linux/centos/docker-ce.repo;
+
+                         print_title "yum -y update after adding docker repo";
+                         sudo yum -y update;
+
+                         print_title "install the latest version";
+                         sudo yum install -y docker-ce docker-ce-cli containerd.io;
+
+                         print_title "Check if docker group exists";
+                         sudo grep docker -io /etc/group
+                         if [[ $? != "0" ]]; then
+                             print_title "Add docker group";
+                             sudo groupadd docker;
+                         fi
+
+                         print_title "Add current user to docker group";
+                         sudo usermod -aG docker $USER;
+
+                         print_title "Start docker.service";
+                         sudo systemctl start docker;
+
+                         print_title "Enable docker.service";
+                         sudo systemctl enable docker;
+
+                         print_title "Test docker hello-world";
+                         sudo docker run hello-world;
+                    ;;
+
+                    debian )
+                        echo 'install docker on debian'
+                    ;;
+
+                    ubuntu )
+                        echo 'install docker on ubuntu'
+                    ;;
+
+                    arch )
+                        echo 'install docker on arch'
+                    ;;
+                esac
+            ;;
+
+            uninstall )
+                echo "selecting ${_docker['action']}";
+            ;;
+
+            * )
+                unknown_option ${_docker['action']} --docker;
+            ;;
+        esac
+    fi
+}
+
+################################################################################
+# check and run _container action
+################################################################################
+function _container_call(){
+    if [[ ${_container['flag']} == 1 ]]; then
+        case ${_container['name']} in
+            node-exporter )
+                # https://hub.docker.com/r/prom/node-exporter
+                print_title "docker pull ${_container['name']}";
+                docker pull prom/node-exporter;
+            ;;
+
+            prometheus )
+                print_title "docker pull ${_container['name']}";
+                docker pull prom/prometheus;
+            ;;
+
+            * )
+                unknown_option ${_container['name']} --container;
+            ;;
+        esac
+    fi
+}
+
+
 while true ; do
     case "$1" in
         -h | --help )
@@ -112,18 +291,21 @@ while true ; do
         --os )
             _os['flag']=1;
             _os['action']=$2;
+            _os_call;
             shift 2;
         ;;
 
         --docker )
             _docker['flag']=1;
             _docker['action']=$2;
+            _docker_call;
             shift 2;
         ;;
 
         --con | --container )
             _container['flag']=1;
             _container['name']=$2;
+            _container_call;
             shift 2;
         ;;
 
@@ -140,173 +322,3 @@ while true ; do
     esac
 done
 
-
-################################################################################
-# check and run _os action
-################################################################################
-if [[ ${_os['flag']} == 1 ]]; then
-    case ${_os['action']} in
-        type )
-            echo $os_release
-        ;;
-
-        version )
-            echo $os_version
-        ;;
-
-        update )
-            case $os_release in
-                centos )
-                    print_title "yum -y update";
-                    sudo yum -y update;
-                ;;
-
-                debian )
-                    echo 'apt-get -y update'
-                ;;
-
-                ubuntu )
-                    echo 'apt-get -y update'
-                ;;
-
-                arch )
-                    echo 'pacman -Ys update'
-                ;;
-            esac
-        ;;
-
-        upgrade )
-            case $os_release in
-                centos )
-                    print_title "yum -y upgrade";
-                    sudo yum -y upgrade;
-                ;;
-
-                debian )
-                    echo 'apt-get -y upgrade'
-                ;;
-
-                ubuntu )
-                    echo 'apt-get -y upgrade'
-                ;;
-
-                arch )
-                    echo 'pacman -Ys upgrade'
-                ;;
-            esac
-        ;;
-
-
-        info )
-            cat /etc/os-*
-        ;;
-        
-        * )
-            unknown_option ${_os['action']} --os;
-        ;;
-    esac
-fi
-
-################################################################################
-# check and run _docker action
-################################################################################
-if [[ ${_docker['flag']} == 1 ]]; then
-    case ${_docker['action']} in
-        install )
-            case $os_release in
-                centos )
-                    # doc used
-                    # https://docs.docker.com/engine/install/centos/#install-using-the-repository
-                    print_title "Remove old version of docker"
-                    sudo yum remove docker \
-                                    docker-client \
-                                    docker-client-latest \
-                                    docker-common \
-                                    docker-latest \
-                                    docker-latest-logrotate \
-                                    docker-logrotate \
-                                    docker-engine;
-
-                     print_title "Install prerequisite for docker"
-                     sudo yum install -y yum-utils;
-
-                     print_title "Install dev dependencies";
-                     yum clean all;
-                     yum groupinstall -y "Development tools";
-
-                     print_title "Add the Docker repository";
-                     sudo yum-config-manager \
-                                --add-repo \
-                                https://download.docker.com/linux/centos/docker-ce.repo;
-
-                     print_title "yum -y update after adding docker repo";
-                     sudo yum -y update;
-
-                     print_title "install the latest version";
-                     sudo yum install -y docker-ce docker-ce-cli containerd.io;
-
-                     print_title "Check if docker group exists";
-                     sudo grep docker -io /etc/group
-                     if [[ $? != "0" ]]; then
-                         print_title "Add docker group";
-                         sudo groupadd docker;
-                     fi
-
-                     print_title "Add current user to docker group";
-                     sudo usermod -aG docker $USER;
-
-                     print_title "Start docker.service";
-                     sudo systemctl start docker;
-
-                     print_title "Enable docker.service";
-                     sudo systemctl enable docker;
-
-                     print_title "Test docker hello-world";
-                     sudo docker run hello-world;
-                ;;
-
-                debian )
-                    echo 'install docker on debian'
-                ;;
-
-                ubuntu )
-                    echo 'install docker on ubuntu'
-                ;;
-
-                arch )
-                    echo 'install docker on arch'
-                ;;
-            esac
-        ;;
-
-        uninstall )
-            echo "selecting ${_docker['action']}";
-        ;;
-
-        * )
-            unknown_option ${_docker['action']} --docker;
-        ;;
-    esac
-fi
-
-################################################################################
-# check and run _container action
-################################################################################
-if [[ ${_container['flag']} == 1 ]]; then
-    case ${_container['name']} in
-        node-exporter )
-            # https://hub.docker.com/r/prom/node-exporter
-            print_title "docker pull ${_container['name']}";
-            docker pull prom/node-exporter;
-        ;;
-
-        prometheus )
-            print_title "docker pull ${_container['name']}";
-            docker pull prom/prometheus;
-        ;;
-
-        * )
-            unknown_option ${_container['name']} --container;
-        ;;
-    esac
-fi
