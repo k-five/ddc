@@ -472,7 +472,7 @@ if [[ ${_command['flag']} == 1 ]]; then
         ;;
 
         docker )
-            echo "Check prerequisites";
+            echo "Check docker-*";
             command_docker;
         ;;
 
