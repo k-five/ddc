@@ -45,12 +45,17 @@ function __help(){
     |                   $(colorize 'cyan' 'compose'): try install docker-compose
     |                   $(colorize 'cyan' 'kubectl'): try install kubernetes CLI
 
+
     | --con
     | --container       container to install (official) ...
     |                   $(colorize 'yellow' 'prometheus'): install prometheus
     |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
     |                   $(colorize 'yellow' 'visualizer'): install docker visualizer
     |                   $(colorize 'yellow' 'portainer-ce'): install portainer-ce
+
+    | --reg
+    | --registry        use a mirror registry address
+    |                   $(colorize 'white' 'index.docker.io') is the default address
 
     | --port            open a port publicly
 
@@ -102,6 +107,7 @@ _os['action']='';
 declare -A _docker;
 _docker['flag']=0;
 _docker['action']='';
+_docker['registry']='';
 
 declare -A _container;
 _container['flag']=0;
@@ -306,7 +312,7 @@ function _container_call(){
             node-exporter )
                 # https://hub.docker.com/r/prom/node-exporter
                 print_title "docker pull ${_container['name']}";
-                docker pull prom/node-exporter;
+                docker pull ${_docker['registry']}/prom/node-exporter;
                 echo;
                 echo 'reference';
                 echo 'https://hub.docker.com/r/prom/node-exporter';
@@ -315,7 +321,7 @@ function _container_call(){
 
             prometheus )
                 print_title "docker pull ${_container['name']}";
-                docker pull prom/prometheus;
+                docker pull ${_docker['registry']}/prom/prometheus;
                 echo;
                 echo 'reference';
                 echo 'https://hub.docker.com/r/prom/prometheus';
@@ -324,7 +330,7 @@ function _container_call(){
 
             visualizer )
                 print_title "docker pull ${_container['name']}";
-                docker pull dockersamples/visualizer;
+                docker pull ${_docker['registry']}/dockersamples/visualizer;
                 echo;
                 echo 'reference';
                 echo 'https://github.com/dockersamples/docker-swarm-visualizer';
@@ -332,7 +338,7 @@ function _container_call(){
 
             portainer-ce )
                 print_title "docker pull ${_container['name']}";
-                docker pull portainer/portainer-ce;
+                docker pull ${_docker['registry']}/portainer/portainer-ce;
                 echo;
                 echo 'reference';
                 echo 'https://registry.hub.docker.com/r/portainer/portainer-ce/#!';
@@ -364,6 +370,11 @@ while true ; do
             _docker['flag']=1;
             _docker['action']=$2;
             _docker_call;
+            shift 2;
+        ;;
+
+        --reg | --registry )
+            _docker['registry']=$2;
             shift 2;
         ;;
 
