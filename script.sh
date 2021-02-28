@@ -84,7 +84,7 @@ function unknown_option(){
 ################################################################################
 # main flags, both longs and shorts
 ################################################################################
-ARGS=`getopt -o "h" -l "help,os:,docker:,container:" -- "$@"`
+ARGS=`getopt -o "h" -l "help,os:,docker:,container:,registry:" -- "$@"`
 eval set -- "$ARGS"
 
 
