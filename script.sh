@@ -145,7 +145,23 @@ if [[ ${_os['flag']} == 1 ]]; then
         ;;
 
         update )
-            echo 'os update'
+            case $os_release in
+                centos )
+                    echo 'yum -y update'
+                ;;
+
+                debian )
+                    echo 'apt-get -y update'
+                ;;
+
+                ubuntu )
+                    echo 'apt-get -y update'
+                ;;
+
+                arch )
+                    echo 'pacman -Ys update'
+                ;;
+            esac
         ;;
 
         info )
@@ -164,8 +180,69 @@ fi
 if [[ ${_docker['flag']} == 1 ]]; then
     case ${_docker['action']} in
         install )
-            echo "selecting ${_docker['action']}";
+            case $os_release in
+                centos )
+                    # doc used
+                    # https://docs.docker.com/engine/install/centos/#install-using-the-repository
+                    echo 'yum -y update'
+                    sudo yum remove docker \
+                                    docker-client \
+                                    docker-client-latest \
+                                    docker-common \
+                                    docker-latest \
+                                    docker-latest-logrotate \
+                                    docker-logrotate \
+                                    docker-engine;
+
+                     echo "Install prerequisite"
+                     sudo yum install -y yum-utils;
+
+                     echo "Install dev dependencies";
+                     yum clean all;
+                     yum groupinstall -y "Development tools";
+
+                     echo "Add the Docker repository";
+                     sudo yum-config-manager \
+                                --add-repo \
+                                https://download.docker.com/linux/centos/docker-ce.repo;
+
+                     echo "install the latest version";
+                     sudo yum install docker-ce docker-ce-cli containerd.io;
+
+                     echo "Check if docker group exists";
+                     sudo grep docker -io /etc/group
+                     if [[ $? != "0" ]]; then
+                         echo "Add docker group";
+                         sudo groupadd docker;
+                     fi
+
+                     echo "Add current user to docker group";
+                     sudo usermod -aG docker $USER;
+
+                     echo "Start docker.service";
+                     sudo systemctl start docker;
+
+                     echo "Enable docker.service";
+                     sudo systemctl enable docker;
+
+                     echo "Test docker hello-world";
+                     sudo docker run hello-world;
+                ;;
+
+                debian )
+                    echo 'install docker on debian'
+                ;;
+
+                ubuntu )
+                    echo 'install docker on ubuntu'
+                ;;
+
+                arch )
+                    echo 'install docker on arch'
+                ;;
+            esac
         ;;
+
         uninstall )
             echo "selecting ${_docker['action']}";
         ;;
