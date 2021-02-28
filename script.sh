@@ -19,7 +19,7 @@ function colorize(){
 }
 
 function print_title(){
-    echo  "task ... $(colorize cyan $1)"; 
+    echo  "task ... $(colorize cyan $@)"; 
 }
 
 
