@@ -45,7 +45,6 @@ function __help(){
     |                   $(colorize 'cyan' 'compose'): try install docker-compose
     |                   $(colorize 'cyan' 'kubectl'): try install kubernetes CLI
 
-
  -C | --con
     | --container       container to install (official) ...
     |                   $(colorize 'yellow' 'prometheus'): install prometheus
@@ -55,7 +54,7 @@ function __help(){
 
     | --command         Command actions ...
     |                   $(colorize 'white' 'check'): check prerequisites
-    |                   $(colorize 'white' 'docker'): docker if docker-* have been installed
+    |                   $(colorize 'white' 'docker'): check if docker-* have been installed
 
 -R  | --reg
     | --registry        use a mirror registry address
