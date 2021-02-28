@@ -46,7 +46,7 @@ function __help(){
     |                   $(colorize 'cyan' 'kubectl'): try install kubernetes CLI
 
     | --con
-    | --container       container to install ...
+    | --container       container to install (official) ...
     |                   $(colorize 'yellow' 'prometheus'): install prometheus
     |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
     |                   $(colorize 'yellow' 'visualizer'): install docker visualizer
