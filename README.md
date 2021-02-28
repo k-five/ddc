@@ -65,7 +65,7 @@ ldc --help
 # update the OS
 ldc --os update
 
-# update the OS, install Docker, install prometheus for default registry
+# update the OS, install Docker, install prometheus form default registry
 ldc --os update --docker docker --con node-exporter --con prometheus
 
 # update the OS, install Docker, install node-exporter and prometheus from a docker.mirror.derak.cloud
