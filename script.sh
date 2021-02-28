@@ -48,10 +48,10 @@ function __help(){
     |                   $(colorize 'yellow' 'prometheus'): install prometheus
     |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
 
+    | --port            open a port publicly
 
-Company   Derak.Cloud
 Developer Shakiba Moshiri
-source    https://github.com/k-five/idac "
+source    https://github.com/k-five/ldc"
 
     exit 0;
 }
