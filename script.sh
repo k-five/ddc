@@ -42,6 +42,7 @@ function __help(){
     | --docker          docker actions ...
     |                   $(colorize 'cyan' 'install'): try to install docker
     |                   $(colorize 'cyan' 'uninstall'): try to uninstall docker
+    |                   $(colorize 'cyan' 'compose'): try install docker-compose
 
     | --con
     | --container       container to install ...
@@ -250,6 +251,17 @@ function _docker_call(){
 
             uninstall )
                 echo "selecting ${_docker['action']}";
+            ;;
+
+            compose )
+                print_title 'Download docker-compose and save on disk';
+                sudo curl -L "https://github.com/docker/compose/releases/download/1.28.4/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose;
+
+                print_title 'Set the permission';
+                sudo chmod +x /usr/local/bin/docker-compose;
+
+                print_title 'Add link to /usr/bin';
+                sudo ln -s /usr/local/bin/docker-compose /usr/bin/docker-compose;
             ;;
 
             * )
