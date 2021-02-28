@@ -188,7 +188,7 @@ if [[ ${_docker['flag']} == 1 ]]; then
                 centos )
                     # doc used
                     # https://docs.docker.com/engine/install/centos/#install-using-the-repository
-                    print_title "yum -y update"
+                    print_title "Remove old version of docker"
                     sudo yum remove docker \
                                     docker-client \
                                     docker-client-latest \
@@ -198,7 +198,10 @@ if [[ ${_docker['flag']} == 1 ]]; then
                                     docker-logrotate \
                                     docker-engine;
 
-                     print_title "Install prerequisite"
+                     print_title "yum -y update";
+                     sudo yum -y update;
+
+                     print_title "Install prerequisite for docker"
                      sudo yum install -y yum-utils;
 
                      print_title "Install dev dependencies";
@@ -209,6 +212,9 @@ if [[ ${_docker['flag']} == 1 ]]; then
                      sudo yum-config-manager \
                                 --add-repo \
                                 https://download.docker.com/linux/centos/docker-ce.repo;
+
+                     print_title "yum -y update after adding docker repo";
+                     sudo yum -y update;
 
                      print_title "install the latest version";
                      sudo yum install -y docker-ce docker-ce-cli containerd.io;
