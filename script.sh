@@ -107,7 +107,7 @@ _os['action']='';
 declare -A _docker;
 _docker['flag']=0;
 _docker['action']='';
-_docker['registry']='';
+_docker['registry']='index.docker.io';
 
 declare -A _container;
 _container['flag']=0;
