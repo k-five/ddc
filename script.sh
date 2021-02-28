@@ -53,6 +53,9 @@ function __help(){
     |                   $(colorize 'yellow' 'visualizer'): install docker visualizer
     |                   $(colorize 'yellow' 'portainer-ce'): install portainer-ce
 
+ -C | --command         Command actions ...
+    |                   $(colorize 'yellow' 'check'): check prerequisites
+
     | --reg
     | --registry        use a mirror registry address
     |                   $(colorize 'white' 'index.docker.io') is the default address
@@ -73,6 +76,32 @@ if [[ $1 == "" ]]; then
     __help;
 fi
 
+################################################################################
+# check for required commands
+################################################################################
+function command_check () {
+    declare -a _cmds_;
+    _cmds_=(curl echo printf chmod);
+    return_code=0;
+
+    for cmd in ${_cmds_[@]}; do
+        temp_var=$(which  $cmd > /dev/null 2>&1);
+        if [[ $? != 0 ]]; then
+            printf "%-20s %s" "$cmd~" "~" | tr ' ~' '. ';
+            printf "[ $(colorize 'red' 'ERROR') ] not found\n";
+            if [[ $cmd == 'shodan' ]]; then
+                echo '>  Please install shodan manually: https://cli.shodan.io/';
+            fi
+            return_code=1;
+        else
+            printf "%-20s %s" "$cmd~" "~" | tr ' ~' '. ';
+            printf "[ $(colorize 'green' 'OK') ]\n";
+
+        fi
+    done
+    return $return_code;
+}
+
 
 function unknown_option(){
     echo "$(colorize red $1) is unknown option for $(colorize 'green' $2)";
@@ -84,7 +113,7 @@ function unknown_option(){
 ################################################################################
 # main flags, both longs and shorts
 ################################################################################
-ARGS=`getopt -o "h" -l "help,os:,docker:,container:,registry:" -- "$@"`
+ARGS=`getopt -o "h" -l "help,os:,docker:,container:,registry:,command:" -- "$@"`
 eval set -- "$ARGS"
 
 
@@ -112,6 +141,10 @@ _docker['registry']='index.docker.io';
 declare -A _container;
 _container['flag']=0;
 _container['name']='';
+
+declare -A _command;
+_command['flag']=1;
+_command['action']='';
 
 
 ################################################################################
@@ -385,6 +418,12 @@ while true ; do
             shift 2;
         ;;
 
+        # command
+        --command )
+            _command['flag']=1;
+            _command['action']=$2;
+            shift 2;
+        ;;
 
          -- )
             shift;
@@ -397,4 +436,14 @@ while true ; do
          ;;
     esac
 done
+
+
+if [[ ${_command['flag']} == 1 ]]; then
+    case ${_command['action']} in
+        check )
+            echo "Check prerequisites";
+            command_check;
+        ;;
+    esac
+fi
 
