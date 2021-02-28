@@ -47,6 +47,8 @@ function __help(){
     | --container       container to install ...
     |                   $(colorize 'yellow' 'prometheus'): install prometheus
     |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
+    |                   $(colorize 'yellow' 'visualizer'): install docker visualizer
+    |                   $(colorize 'yellow' 'portainer-ce'): install portainer-ce
 
     | --port            open a port publicly
 
@@ -272,6 +274,16 @@ function _container_call(){
             prometheus )
                 print_title "docker pull ${_container['name']}";
                 docker pull prom/prometheus;
+            ;;
+
+            visualizer )
+                print_title "docker pull ${_container['name']}";
+                docker pull dockersamples/visualizer;
+            ;;
+
+            portainer-ce )
+                print_title "docker pull ${_container['name']}";
+                docker pull portainer/portainer-ce;
             ;;
 
             * )
