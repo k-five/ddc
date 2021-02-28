@@ -151,7 +151,8 @@ if [[ ${_os['flag']} == 1 ]]; then
         update )
             case $os_release in
                 centos )
-                    echo 'yum -y update'
+                    print_title "yum -y update";
+                    sudo yum -y update;
                 ;;
 
                 debian )
@@ -167,6 +168,28 @@ if [[ ${_os['flag']} == 1 ]]; then
                 ;;
             esac
         ;;
+
+        upgrade )
+            case $os_release in
+                centos )
+                    print_title "yum -y upgrade";
+                    sudo yum -y upgrade;
+                ;;
+
+                debian )
+                    echo 'apt-get -y upgrade'
+                ;;
+
+                ubuntu )
+                    echo 'apt-get -y upgrade'
+                ;;
+
+                arch )
+                    echo 'pacman -Ys upgrade'
+                ;;
+            esac
+        ;;
+
 
         info )
             cat /etc/os-*
