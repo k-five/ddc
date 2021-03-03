@@ -51,6 +51,7 @@ function __help(){
     |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
     |                   $(colorize 'yellow' 'visualizer'): install docker visualizer
     |                   $(colorize 'yellow' 'portainer-ce'): install portainer-ce
+    |                   $(colorize 'yellow' 'grafana'): install grafana
 
     | --command         Command actions ...
     |                   $(colorize 'white' 'check'): check prerequisites
@@ -407,6 +408,14 @@ function _container_call(){
                 echo 'reference';
                 echo 'https://registry.hub.docker.com/r/portainer/portainer-ce/#!';
                 echo 'https://documentation.portainer.io/v2.0/deploy/ceinstalldocker/';
+            ;;
+
+            grafana )
+                print_title "docker pull ${_container['name']}";
+                docker pull ${_docker['registry']}/grafana/grafana:latest;
+                echo;
+                echo 'reference';
+                echo 'https://github.com/grafana/grafana';
             ;;
 
             * )
