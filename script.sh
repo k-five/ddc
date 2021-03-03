@@ -375,6 +375,8 @@ function _container_call(){
                 echo 'reference';
                 echo 'https://hub.docker.com/r/prom/node-exporter';
                 echo 'https://github.com/prometheus/node_exporter';
+                echo 'run';
+                echo 'docker run -d  -v "/:/host:ro,rslave" --net host --pid host -p 9100:9100   prom/node-exporter  --path.rootfs=/host';
             ;;
 
             prometheus )
@@ -384,6 +386,8 @@ function _container_call(){
                 echo 'reference';
                 echo 'https://hub.docker.com/r/prom/prometheus';
                 echo 'https://github.com/prometheus/prometheus';
+                echo 'run';
+                echo 'docker run --name prometheus -d -p 127.0.0.1:9090:9090 prom/prometheus';
             ;;
 
             visualizer )
@@ -392,6 +396,8 @@ function _container_call(){
                 echo;
                 echo 'reference';
                 echo 'https://github.com/dockersamples/docker-swarm-visualizer';
+                echo 'run'
+                echo 'docker run -it -d -p 8080:8080 -v /var/run/docker.sock:/var/run/docker.sock dockersamples/visualizer';
             ;;
 
             portainer-ce )
