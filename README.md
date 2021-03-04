@@ -2,7 +2,7 @@
 
 ## How to install
 ```bash
- curl  -sL 'https://raw.githubusercontent.com/k-five/ldc/master/script.sh' -o /usr/bin/ldc
+ curl  -sL 'https://raw.githubusercontent.com/k-five/ldc/master/script.sh' -o /usr/local/bin/ldc
  chmod u+x !$
  ```
 Then you can run it and see the output:
