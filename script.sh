@@ -524,7 +524,8 @@ function _exec_call(){
             print_title "run from URL: ${_exec['action']}";
             mapfile < <(curl -sL ${_exec['action']});
             for cmd in "${MAPFILE[@]}"; do
-                echo $cmd;
+                print_title "try to run [$cmd]";
+                bash -c "$cmd";
             done
         else
             print_title "run from file: ${_exec['action']}";
