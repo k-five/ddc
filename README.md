@@ -61,3 +61,37 @@ For more about bash tab completion you can read [Bash Tab Completion script for 
 > source !$
 > ldc <HIT-TAB>
 ```
+
+## command options
+
+  - `-O | --os`
+    - **type**
+    - **version**
+    - **update**
+    - **upgrade**
+    - **info**
+  - `-D | --docker`
+    - **docker**
+    - **remove**
+    - **compose**
+    - **kubectl**
+  - `-C | --con` or `--container`
+    - **prometheus**
+    - **node-exporter**
+    - **visualizer**
+    - **portainer-ce**
+    - **grafana**
+  - `-R | --reg` or `--registry`
+    - **index.docker.io**
+  - `-P | --port`
+    - **stop**
+    - **start**
+    - **disable**
+    - **enable**
+    - **[number]**
+  - `-E | --exec`
+    - **[file]**
+    - **[URL]**
+  - `--command`
+    - **check**
+    - **docker**
