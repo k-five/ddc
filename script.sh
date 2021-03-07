@@ -475,7 +475,7 @@ function _port_call(){
 
             [[:digit:]]* )
                 _port['number']=${_port['action']/[a-z]*};
-                print_title "allow port number ${_port['action']}";
+                print_title "allow port number ${_port['number']}";
                 for cmd in ${_firewalls[@]}; do
                     which $cmd > /dev/null 2>&1;
                     if [[ $? == 0 ]]; then
