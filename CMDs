@@ -1,0 +1,3 @@
+echo "running commands from a file or remotely";
+ls -la
+lsblk
