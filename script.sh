@@ -68,6 +68,10 @@ function __help(){
     |                   $(colorize 'cyan' 'enable'): enable all firewalls
     |                   $(colorize 'cyan' '[number]'): open this port number
 
+ -E | --exec            execute some commands
+    |                   $(colorize 'cyan' '[file]'): read from a file
+    |                   $(colorize 'cyan' '[URL]'): read from a URL
+
 Developer Shakiba Moshiri
 source    https://github.com/k-five/ldc"
 
@@ -144,7 +148,7 @@ function unknown_option(){
 ################################################################################
 # main flags, both longs and shorts
 ################################################################################
-ARGS=`getopt -o "hO:D:C:R:P:" -l "help,os:,docker:,container:,registry:,command:,port:" -- "$@"`
+ARGS=`getopt -o "hO:D:C:R:P:E:" -l "help,os:,docker:,container:,registry:,command:,port:,exec:" -- "$@"`
 eval set -- "$ARGS"
 
 
@@ -182,6 +186,10 @@ _port['flag']=0;
 _port['action']='';
 _port['number']=0;
 _firewalls=(firewalld iptables ufw);
+
+declare -A _exec;
+_exec['flag']=0;
+_exec['action']='';
 
 ################################################################################
 # check and run _os action
@@ -506,6 +514,30 @@ function _port_call(){
 }
 
 
+################################################################################
+# check and run _exec_call
+################################################################################
+function _exec_call(){
+    if [[ ${_exec['flag']} == 1 ]]; then
+        grep -i  '^http' <<< ${_exec['action']} > /dev/null 2>&1;
+        if [[ $? == 0 ]]; then
+            print_title "run from URL: ${_exec['action']}";
+            mapfile < <(curl -sL ${_exec['action']});
+            for cmd in "${MAPFILE[@]}"; do
+                echo $cmd;
+            done
+        else
+            print_title "run from file: ${_exec['action']}";
+            while read cmd; do
+                print_title "try to run [$cmd]";
+                bash -c "$cmd";
+            done < ${_exec['action']};
+        fi
+    fi
+}
+
+
+
 while true ; do
     case "$1" in
         -h | --help )
@@ -549,6 +581,13 @@ while true ; do
             _port['flag']=1;
             _port['action']=$2;
             _port_call;
+            shift 2;
+        ;;
+
+        -E | --exec )
+            _exec['flag']=1;
+            _exec['action']=$2;
+            _exec_call;
             shift 2;
         ;;
 
