@@ -62,8 +62,10 @@ function __help(){
     |                   $(colorize 'white' 'index.docker.io') is the default address
 
  -P | --port            open a port publicly
-    |                   $(colorize 'cyan' 'off'): turn off all firewalls
-    |                   $(colorize 'cyan' 'disable'): disable off all firewalls
+    |                   $(colorize 'cyan' 'stop'): stop all firewalls
+    |                   $(colorize 'cyan' 'start'): start all firewalls
+    |                   $(colorize 'cyan' 'disable'): disable all firewalls
+    |                   $(colorize 'cyan' 'enable'): enable all firewalls
     |                   $(colorize 'cyan' '[number]'): open this port number
 
 Developer Shakiba Moshiri
@@ -434,30 +436,41 @@ function _container_call(){
 }
 
 
+
+
 ################################################################################
 # check and run _port_call
 ################################################################################
+function firewall_action(){
+    action=$1;
+    for cmd in ${_firewalls[@]}; do
+        which $cmd > /dev/null 2>&1;
+            if [[ $? == 0 ]]; then
+                case $action in
+                    stop )
+                         echo "sudo systemctl $action $cmd";
+                    ;;
+                    start )
+                         echo "sudo systemctl $action $cmd";
+                    ;;
+                    enable )
+                         echo "sudo systemctl $action $cmd";
+                    ;;
+                    disable )
+                         echo "sudo systemctl $action $cmd";
+                    ;;
+                esac
+            fi
+    done
+
+}
+
 function _port_call(){
     if [[ ${_port['flag']} == 1 ]]; then
         case ${_port['action']} in
-            off )
-                print_title "firewalls are going to be ... ${_port['action']}";
-                for cmd in ${_firewalls[@]}; do
-                    which $cmd > /dev/null 2>&1;
-                        if [[ $? == 0 ]]; then
-                             echo "sudo systemctl stop $cmd";
-                        fi
-                done
-            ;;
-
-            disable )
-                print_title "firewalls are going to be ... ${_port['action']}";
-                for cmd in ${_firewalls[@]}; do
-                    which $cmd > /dev/null 2>&1;
-                        if [[ $? == 0 ]]; then
-                             echo "sudo systemctl disable $cmd";
-                        fi
-                done
+            stop | start | disable | enable )
+                print_title "${_port['action']}-ing firewalls";
+                firewall_action ${_port['action']};
             ;;
 
             [[:digit:]]* )
