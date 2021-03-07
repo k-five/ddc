@@ -473,10 +473,12 @@ function _port_call(){
                             ;;
 
                             iptables )
+                                echo "iptables-save > iptables-backup-$(date '+%F-%A-%H-%M-%S')"
                                 echo "iptables -I INPUT -p tcp -m tcp --dport ${_port['number']} -j ACCEPT"
                             ;;
 
                             ufw )
+                                echo "ufw allow ${_port['number']}";
                             ;;
                         esac
                     fi
