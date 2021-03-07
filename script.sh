@@ -61,7 +61,10 @@ function __help(){
     | --registry        use a mirror registry address
     |                   $(colorize 'white' 'index.docker.io') is the default address
 
-    | --port            open a port publicly
+ -P | --port            open a port publicly
+    |                   $(colorize 'cyan' 'off'): turn off all firewalls
+    |                   $(colorize 'cyan' 'disable'): disable off all firewalls
+    |                   $(colorize 'cyan' '[number]'): open this port number
 
 Developer Shakiba Moshiri
 source    https://github.com/k-five/ldc"
@@ -139,7 +142,7 @@ function unknown_option(){
 ################################################################################
 # main flags, both longs and shorts
 ################################################################################
-ARGS=`getopt -o "hO:D:C:R:" -l "help,os:,docker:,container:,registry:,command:" -- "$@"`
+ARGS=`getopt -o "hO:D:C:R:P:" -l "help,os:,docker:,container:,registry:,command:,port:" -- "$@"`
 eval set -- "$ARGS"
 
 
@@ -172,6 +175,11 @@ declare -A _command;
 _command['flag']=0;
 _command['action']='';
 
+declare -A _port;
+_port['flag']=0;
+_port['action']='';
+_port['number']=0;
+_firewalls=(firewalld iptables ufw);
 
 ################################################################################
 # check and run _os action
@@ -426,6 +434,63 @@ function _container_call(){
 }
 
 
+################################################################################
+# check and run _port_call
+################################################################################
+function _port_call(){
+    if [[ ${_port['flag']} == 1 ]]; then
+        case ${_port['action']} in
+            off )
+                print_title "firewalls are going to be ... ${_port['action']}";
+                for cmd in ${_firewalls[@]}; do
+                    which $cmd > /dev/null 2>&1;
+                        if [[ $? == 0 ]]; then
+                             echo "sudo systemctl stop $cmd";
+                        fi
+                done
+            ;;
+
+            disable )
+                print_title "firewalls are going to be ... ${_port['action']}";
+                for cmd in ${_firewalls[@]}; do
+                    which $cmd > /dev/null 2>&1;
+                        if [[ $? == 0 ]]; then
+                             echo "sudo systemctl disable $cmd";
+                        fi
+                done
+            ;;
+
+            [[:digit:]]* )
+                _port['number']=${_port['action']/[a-z]*};
+                print_title "allow port number ${_port['action']}";
+                for cmd in ${_firewalls[@]}; do
+                    which $cmd > /dev/null 2>&1;
+                    if [[ $? == 0 ]]; then
+                        case $cmd in
+                            firewalld )
+                                echo "firewall-cmd --zone=public --add-port=${_port['number']}/tcp --permanent";
+                                echo "firewall-cmd --reload";
+                            ;;
+
+                            iptables )
+                                echo "iptables -I INPUT -p tcp -m tcp --dport ${_port['number']} -j ACCEPT"
+                            ;;
+
+                            ufw )
+                            ;;
+                        esac
+                    fi
+                done
+            ;;
+
+            * )
+                unknown_option ${_port['action']} --port;
+            ;;
+        esac
+    fi
+}
+
+
 while true ; do
     case "$1" in
         -h | --help )
@@ -462,6 +527,13 @@ while true ; do
         --command )
             _command['flag']=1;
             _command['action']=$2;
+            shift 2;
+        ;;
+
+        -P | --port )
+            _port['flag']=1;
+            _port['action']=$2;
+            _port_call;
             shift 2;
         ;;
 
