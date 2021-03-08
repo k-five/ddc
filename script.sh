@@ -32,45 +32,45 @@ function __help(){
 
  -h | --help            print this help
 
- -O | --os              OS actions ...
+ -O | --os              OS actions
     |                   $(colorize 'cyan' 'type'): show / check the name
     |                   $(colorize 'cyan' 'version'): show / check the version
     |                   $(colorize 'cyan' 'update'): update the OS
     |                   $(colorize 'cyan' 'upgrade'): upgrade the OS
     |                   $(colorize 'cyan' 'info'): more info about OS
 
- -D | --docker          docker actions ...
+ -D | --docker          docker actions
     |                   $(colorize 'cyan' 'docker'): try to install docker
     |                   $(colorize 'cyan' 'remove'): try to uninstall docker
     |                   $(colorize 'cyan' 'compose'): try install docker-compose
     |                   $(colorize 'cyan' 'kubectl'): try install kubernetes CLI
 
  -C | --con
-    | --container       container to install (official) ...
+    | --container       container to install (official)
     |                   $(colorize 'yellow' 'prometheus'): install prometheus
     |                   $(colorize 'yellow' 'node-exporter'): install node-exporter
     |                   $(colorize 'yellow' 'visualizer'): install docker visualizer
     |                   $(colorize 'yellow' 'portainer-ce'): install portainer-ce
     |                   $(colorize 'yellow' 'grafana'): install grafana
 
-    | --command         Command actions ...
-    |                   $(colorize 'white' 'check'): check prerequisites
-    |                   $(colorize 'white' 'docker'): check if docker-* have been installed
+ -P | --port            port actions
+    |                   $(colorize 'cyan' 'stop'): stop all firewalls
+    |                   $(colorize 'cyan' 'start'): start all firewalls
+    |                   $(colorize 'cyan' 'disable'): disable all firewalls
+    |                   $(colorize 'cyan' 'enable'): enable all firewalls
+    |                   $(colorize 'white' '[number]'): open this port number
+
+ -E | --exec            run commands from
+    |                   $(colorize 'white' '[file]'): read from a file
+    |                   $(colorize 'white' '[URL]'): read from a URL
 
 -R  | --reg
     | --registry        use a mirror registry address
     |                   $(colorize 'white' 'index.docker.io') is the default address
 
- -P | --port            open a port publicly
-    |                   $(colorize 'cyan' 'stop'): stop all firewalls
-    |                   $(colorize 'cyan' 'start'): start all firewalls
-    |                   $(colorize 'cyan' 'disable'): disable all firewalls
-    |                   $(colorize 'cyan' 'enable'): enable all firewalls
-    |                   $(colorize 'cyan' '[number]'): open this port number
-
- -E | --exec            execute some commands
-    |                   $(colorize 'cyan' '[file]'): read from a file
-    |                   $(colorize 'cyan' '[URL]'): read from a URL
+    | --command         Command actions ...
+    |                   $(colorize 'white' 'check'): check prerequisites
+    |                   $(colorize 'white' 'docker'): check if docker-* have been installed
 
 Developer Shakiba Moshiri
 source    https://github.com/k-five/ldc"
