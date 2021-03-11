@@ -615,7 +615,7 @@ if [[ ${_command['flag']} == 1 ]]; then
         ;;
 
         * )
-            unknown_option ${_container['name']} --command;
+            unknown_option ${_command['action']} --command;
         ;;
     esac
 fi
