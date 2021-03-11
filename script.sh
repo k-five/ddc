@@ -125,9 +125,6 @@ function command_docker () {
         if [[ $? != 0 ]]; then
             printf "%-20s %s" "$cmd~" "~" | tr ' ~' '. ';
             printf "[ $(colorize 'red' 'ERROR') ] not found\n";
-            if [[ $cmd == 'shodan' ]]; then
-                echo '>  Please install shodan manually: https://cli.shodan.io/';
-            fi
             return_code=1;
         else
             printf "%-20s %s" "$cmd~" "~" | tr ' ~' '. ';
